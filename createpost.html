@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>QA</title>
+</head>
+<header>
+	<center>
+		<h1>Speer QA Interview Question</h1>
+	</center>
+</header>
+<style>
+	header {
+		position: fixed;
+		color: white;
+		width: 100%;
+		height: 70px;
+		background-color: #8dc21f;
+	}
+	body{
+	margin: 0;
+	}
+
+	#ha_wa_i{
+		display: block;
+		margin: 10px 20px;
+		overflow: hidden;
+	}
+
+	#ha_wa_i>textarea{
+	margin: 0;
+	border: red 3px double;
+	border-radius: 6px;
+		line-height: 1.2em;
+		padding: 0.5em 1em;
+		width: 300px;
+	}
+</style>
+
+<br>
+<br>
+<br>
+
+<body>
+	<form action="test.html" method="post" enctype="multipart/form-data">
+
+	<label id="ha_wa_i">
+		<textarea name="ha_wa_i" placeholder="Write your post"></textarea>
+	</label>
+	
+	<br>
+	<br>
+	
+		<input type="file" name="test" accept="image/*" multiple onchange="previewFile(this);">
+		<input type="submit" value="Send">
+	</form>
+	<p>Preview</p>
+	<img id="preview" width="100" height="100">
+
+	<script>
+	// テキストエリアの拡張処理
+	function afeed(element) {
+		if (element.tagName == 'TEXTAREA') {
+
+			// 行の高さとpadding値を取得する。IEやSafariなど、ブラウザによって必要な関数が異なるので、orで３パターン分取れるようにしてある。
+			var stylelists = window.getComputedStyle(element, null) || element.currentStyle || document.defaultView.getComputedStyle(element, '');
+
+			var line_height = stylelists.getPropertyValue('line-height').replace(/px/g, "");
+			var line_length;
+
+			var firstheight = Number(element.offsetHeight) - stylelists.getPropertyValue('padding-top').replace(/px/g, "") - stylelists.getPropertyValue('padding-top').replace(/px/g, "");
+
+			var result_height;
+
+			element.style.height = firstheight + 'px';
+			element.style.resize = 'none';
+
+			element.addEventListener('input', function () {
+
+				// 改行文字の個数を取得
+				if (element.value.match(/\n/g) === null) {
+					line_length = 0;
+				} else {
+					line_length = element.value.match(/\n/g).length;
+				}
+
+				// 見栄えの関係上、１つ以上改行があるときは文字のすぐ下に枠が来るようにする
+				if (line_length === 0) {
+					result_height = firstheight;
+				} else {
+					result_height = ((line_length - 1) * line_height) + firstheight;
+				}
+				element.style.height = result_height + 'px';
+			}, false);
+		} else {
+			console.log('Error: テキストエリアでないものに対して適用されています。');
+		}
+	}
+
+	var textarea = document.querySelector('#ha_wa_i textarea');
+	afeed(textarea);
+
+
+
+		function previewFile(hoge) {
+			var fileData = new FileReader();
+			fileData.onload = (function () {
+				//id属性が付与されているimgタグのsrc属性に、fileReaderで取得した値の結果を入力することで
+				//プレビュー表示している
+				document.getElementById('preview').src = fileData.result;
+			});
+			fileData.readAsDataURL(hoge.files[0]);
+		}
+	</script>
+</body>
+
+</html>
